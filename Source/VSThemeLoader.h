@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
-
-@class VSTheme;
+#import "VSTheme.h"
 
 @interface VSThemeLoader : NSObject
 
 @property (nonatomic, strong, readonly) VSTheme *defaultTheme;
 @property (nonatomic, strong, readonly) NSArray *themes;
+
++ (VSThemeLoader *)sharedInstance;
 
 - (VSTheme *)themeNamed:(NSString *)themeName;
 

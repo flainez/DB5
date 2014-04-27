@@ -7,7 +7,6 @@
 //
 
 #import "VSThemeLoader.h"
-#import "VSTheme.h"
 
 
 @interface VSThemeLoader ()
@@ -20,18 +19,30 @@
 @implementation VSThemeLoader
 
 
++ (VSThemeLoader *)sharedInstance
+{
+    static VSThemeLoader  *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+    {
+        sharedInstance = [self new];
+    });
+    return sharedInstance;
+}
+
+
 - (id)init {
-	
+
 	self = [super init];
 	if (self == nil)
 		return nil;
-	
+
 	NSString *themesFilePath = [[NSBundle mainBundle] pathForResource:@"DB5" ofType:@"plist"];
 	NSDictionary *themesDictionary = [NSDictionary dictionaryWithContentsOfFile:themesFilePath];
-	
+
 	NSMutableArray *themes = [NSMutableArray array];
 	for (NSString *oneKey in themesDictionary) {
-		
+
 		VSTheme *theme = [[VSTheme alloc] initWithDictionary:themesDictionary[oneKey]];
 		if ([[oneKey lowercaseString] isEqualToString:@"default"])
 			_defaultTheme = theme;
@@ -43,9 +54,9 @@
 		if (oneTheme != _defaultTheme)
 			oneTheme.parentTheme = _defaultTheme;
     }
-    
+
 	_themes = themes;
-	
+
 	return self;
 }
 
